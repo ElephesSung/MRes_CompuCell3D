@@ -1,0 +1,5 @@
+<Simulation version="4.2.5">
+   <XMLScript Type="XMLScript">Simulation/NK_Tumour.xml</XMLScript>
+   <PythonScript Type="PythonScript">Simulation/NK_Tumour.py</PythonScript>
+   <Resource Type="Python">Simulation/NK_TumourSteppables.py</Resource>
+</Simulation>
