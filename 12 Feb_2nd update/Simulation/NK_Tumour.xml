@@ -1,0 +1,113 @@
+<CompuCell3D Revision="20210612" Version="4.2.5">
+   
+   <Metadata>
+      
+      <!-- Basic properties simulation -->
+      <NumberOfProcessors>1</NumberOfProcessors>
+      <DebugOutputFrequency>10</DebugOutputFrequency>
+      <!-- <NonParallelModule Name="Potts"/> -->
+   </Metadata>
+   
+   <Potts>
+      
+      <!-- Basic properties of CPM (GGH) algorithm -->
+      <Dimensions x="250" y="250" z="1"/>
+      <Boundary_y></Boundary_y>
+      <Boundary_x></Boundary_x>
+      <Steps>30000</Steps>
+      <Temperature>7</Temperature>
+      <NeighborOrder>2</NeighborOrder>
+      <LatticeType>Hexagonal</LatticeType>
+   </Potts>
+   
+   <Plugin Name="CellType">
+      
+      <!-- Listing all cell types in the simulation -->
+      <CellType TypeId="0" TypeName="Medium"/>
+      <CellType TypeId="1" TypeName="NK"/>
+      <CellType TypeId="2" TypeName="Tumour"/>
+      <CellType TypeId="3" TypeName="DeathTumour"/>
+      <CellType TypeId="4" TypeName="Wall" Freeze=""/>
+   </Plugin>
+   
+   <Plugin Name="ExternalPotential"/>
+   
+   <Plugin Name="PolarizationVector"/>
+   
+   <Plugin Name="Volume"/>
+   
+   <Plugin Name="Surface"/>
+   
+   <!--<Plugin Name="Volume">-->
+      <!--<VolumeEnergyParameters CellType="NK" LambdaVolume="2.0" TargetVolume="85"/>-->
+      <!--<VolumeEnergyParameters CellType="Tumour" LambdaVolume="2.0" TargetVolume="288"/>-->
+      <!--<VolumeEnergyParameters CellType="DeathTumour" LambdaVolume="2.0" TargetVolume="288"/>-->
+   <!--</Plugin>-->
+   
+   <!--<Plugin Name="Surface">-->
+      <!--<SurfaceEnergyParameters CellType="NK" LambdaSurface="2.0" TargetSurface="37"/>-->
+      <!--<SurfaceEnergyParameters CellType="Tumour" LambdaSurface="2.0" TargetSurface="68"/>-->
+      <!--<SurfaceEnergyParameters CellType="DeathTumour" LambdaSurface="2.0" TargetSurface="68"/>-->
+   <!--</Plugin>-->
+   
+   <Plugin Name="Connectivity">
+   <!-- Connectivity constraint applied to each cell. Energy penalty specifies how strong the constraint is. Penalty is specified globally for each cell  -->
+   <!-- This constraint works in 2D and on square lattice only! It also requires that the <NeighborOrder> in the Potts section is 1 or 2! -->
+   <!-- For more flexible version of this plugin use ConnectivityLocalFlex where constraint penalty is specified for each cell individually using Python scripting using the following syntax -->
+   <!-- self.connectivityLocalFlexPlugin.setConnectivityStrength(cell,10000000) -->
+      <Penalty>10000000</Penalty>
+   </Plugin>
+
+   
+   <Plugin Name="CenterOfMass">   
+      <!-- Module tracking center of mass of each cell -->
+   </Plugin>
+   
+   <Plugin Name="Contact">
+      <!-- Specification of adhesion energies -->
+      <Energy Type1="Medium" Type2="Medium">0.0</Energy>
+      <Energy Type1="Medium" Type2="NK">8.0</Energy> 
+      <Energy Type1="Medium" Type2="Tumour">8.0</Energy>
+      <Energy Type1="NK" Type2="NK">100.0</Energy>  
+      <Energy Type1="NK" Type2="Tumour">15.0</Energy> 
+      <Energy Type1="Tumour" Type2="Tumour">19.0</Energy> 
+      <Energy Type1="DeathTumour" Type2="NK">500.0</Energy>
+      <Energy Type1="DeathTumour" Type2="Tumour">500.0</Energy>
+      <Energy Type1="DeathTumour" Type2="DeathTumour">500.0</Energy>
+      <Energy Type1="DeathTumour" Type2="Wall">1000.0</Energy>
+      <Energy Type1="NK" Type2="Wall">1000.0</Energy>
+      <Energy Type1="Tumour" Type2="Wall">1000.0</Energy>
+      <NeighborOrder>3</NeighborOrder>
+   </Plugin>
+   
+   <Plugin Name="NeighborTracker">
+      <!-- Module tracking neighboring cells of each cell -->
+   </Plugin>
+
+   
+   <Plugin Name="PixelTracker">
+    <!-- Module tracking pixels of each cell -->
+   </Plugin>
+
+   
+   <Steppable Type="UniformInitializer">
+      
+      <!-- Initial layout of cells in the form of rectangular slab -->
+      <Region>
+         <BoxMin x="50" y="50" z="0"/>
+         <BoxMax x="200" y="200" z="1"/>
+         <Gap>80</Gap>
+         <Width>7</Width>
+         <Types>NK</Types>
+      </Region>
+      <Region>
+         <BoxMin x="50" y="50" z="0"/>
+         <BoxMax x="200" y="200" z="1"/>
+         <Gap>50</Gap>
+         <Width>7</Width>
+         <Types>Tumour</Types>
+      </Region>
+   </Steppable>
+  
+   
+</CompuCell3D>
